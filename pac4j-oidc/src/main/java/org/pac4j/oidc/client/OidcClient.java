@@ -367,30 +367,46 @@ public class OidcClient extends BaseClient<OidcCredentials, OidcProfile> {
         try {
             for (JWK key : jwkSet.getKeys()) {
                 if (key.getKeyUse() == KeyUse.SIGNATURE) {
+                    System.out.println("_______ found sig:" + KeyUse.SIGNATURE);
+                    System.out.println("_______ adding verifier:" + getVerifier(key));
                     jwtDecoder.addJWSVerifier(getVerifier(key));
                 } else if (key.getKeyUse() == KeyUse.ENCRYPTION) {
+                    System.out.println("_______ found enc:" + KeyUse.ENCRYPTION);
+                    System.out.println("_______ adding decrypter:" + getDecrypter(key));
                     jwtDecoder.addJWEDecrypter(getDecrypter(key));
                 }
             }
         } catch (Exception e) {
+            System.out.println("_______Exception:");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
             throw new TechnicalException(e);
         }
     }
 
     private JWEDecrypter getDecrypter(final JWK key) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (key instanceof RSAKey) {
+            System.out.println("_______ getDecrypter returning RSAKey");
+
             return new RSADecrypter(((RSAKey) key).toRSAPrivateKey());
         }
+        System.out.println("_______ getDecrypter returning null");
+
         return null;
     }
 
     private JWSVerifier getVerifier(final JWK key) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (key instanceof RSAKey) {
+            System.out.println("_______ getVerifier returning RSAkey");
+
             return new RSASSAVerifier(((RSAKey) key).toRSAPublicKey());
         } else if (key instanceof ECKey) {
+            System.out.println("_______ getVerifier returning ECKey");
+
             ECKey ecKey = (ECKey) key;
             return new ECDSAVerifier(ecKey.getX().decodeToBigInteger(), ecKey.getY().decodeToBigInteger());
         }
+        System.out.println("_______ getVerifier returning null");
         return null;
     }
 
@@ -402,10 +418,15 @@ public class OidcClient extends BaseClient<OidcCredentials, OidcProfile> {
      */
     private ClientAuthentication getClientAuthentication(final ClientAuthenticationMethod method) {
         if (ClientAuthenticationMethod.CLIENT_SECRET_POST.equals(method)) {
+            System.out.println("_______ getClientAuthentication returning client_secret_post");
+
             return new ClientSecretPost(this._clientID, this._secret);
         } else if (ClientAuthenticationMethod.CLIENT_SECRET_BASIC.equals(method)) {
+            System.out.println("_______ getClientAuthentication returning client_secret_basic");
+
             return new ClientSecretBasic(this._clientID, this._secret);
         }
+        System.out.println("_______ getClientAuthentication returning null");
         return null;
     }
 
