@@ -27,7 +27,7 @@
 	<artifactId>pac4j</artifactId>
 	<packaging>pom</packaging>
 	<name>pac4j</name>
-	<version>1.7.3-SNAPSHOT</version>
+	<version>1.7.4-SNAPSHOT</version>
 	<description>Profile &amp; Authentication Client for Java</description>
 	<url>https://github.com/pac4j/pac4j</url>
 
@@ -313,6 +313,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -366,6 +367,26 @@
 							</execution>
 						</executions>
 					</plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>assemble-all</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 				</plugins>
 			</build>
 		</profile>
